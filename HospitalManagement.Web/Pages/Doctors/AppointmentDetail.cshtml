@@ -1,0 +1,235 @@
+@page "{id:int}"
+@model HospitalManagement.Web.Pages.Doctors.AppointmentDetailModel
+@{
+    ViewData["Title"] = "Appointment Details";
+}
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-page="./Dashboard" asp-route-id="@Model.DoctorId">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Appointment Details</li>
+                </ol>
+            </nav>
+            <h1 class="mb-4">Appointment Details</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="appointment-detail-card">
+                <div class="appointment-header">
+                    <div class="appointment-id">Appointment #@Model.Appointment.AppointId</div>
+                    <h4>@Model.Appointment.Patient.Name</h4>
+                    <div class="appointment-date">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-event" viewBox="0 0 16 16">
+                            <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z"/>
+                            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                        </svg>
+                        @Model.Appointment.Date?.ToString("MMMM dd, yyyy") at @Model.Appointment.Date?.ToString("h:mm tt")
+                    </div>
+                </div>
+
+                <div class="appointment-body">
+                    <div class="appointment-section">
+                        <div class="appointment-section-title">Appointment Status</div>
+                        <div class="mb-3">
+                            @{
+                                string status = Model.Appointment.AppointmentStatus switch
+                                {
+                                    1 => "Approved",
+                                    2 => "Pending",
+                                    3 => "Completed",
+                                    4 => "Rejected",
+                                    _ => "Unknown"
+                                };
+                            }
+                            <span class="appointment-status" data-status="@status">@status</span>
+                        </div>
+                    </div>
+
+                    <div class="appointment-section">
+                        <div class="appointment-section-title">Patient Information</div>
+                        <div class="appointment-info-grid">
+                            <div class="appointment-info-item">
+                                <div class="appointment-info-label">Name</div>
+                                <div class="appointment-info-value">@Model.Appointment.Patient.Name</div>
+                            </div>
+                            <div class="appointment-info-item">
+                                <div class="appointment-info-label">Gender</div>
+                                <div class="appointment-info-value">@(Model.Appointment.Patient.Gender == "M" ? "Male" : (Model.Appointment.Patient.Gender == "F" ? "Female" : "Other"))</div>
+                            </div>
+                            <div class="appointment-info-item">
+                                <div class="appointment-info-label">Date of Birth</div>
+                                <div class="appointment-info-value">@Model.Appointment.Patient.BirthDate.ToString("MMMM dd, yyyy") (@(DateTime.Today.Year - Model.Appointment.Patient.BirthDate.Year) years)</div>
+                            </div>
+                            <div class="appointment-info-item">
+                                <div class="appointment-info-label">Contact Number</div>
+                                <div class="appointment-info-value">@Model.Appointment.Patient.Phone</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (Model.Appointment.AppointmentStatus == 1 || Model.Appointment.AppointmentStatus == 3)
+                    {
+                        <div class="appointment-section">
+                            <div class="appointment-section-title">Treatment Information</div>
+
+                            <form method="post" class="treatment-form">
+                                <input type="hidden" asp-for="TreatmentInfo.AppointmentId" value="@Model.Appointment.AppointId" />
+
+                                <div class="form-group">
+                                    <label asp-for="TreatmentInfo.Disease" class="form-label">Diagnosis</label>
+                                    <input asp-for="TreatmentInfo.Disease" class="form-control" value="@Model.Appointment.Disease" />
+                                    <span asp-validation-for="TreatmentInfo.Disease" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label asp-for="TreatmentInfo.Progress" class="form-label">Treatment Progress</label>
+                                    <textarea asp-for="TreatmentInfo.Progress" class="form-control" rows="3">@Model.Appointment.Progress</textarea>
+                                    <span asp-validation-for="TreatmentInfo.Progress" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label asp-for="TreatmentInfo.Prescription" class="form-label">Prescription</label>
+                                    <textarea asp-for="TreatmentInfo.Prescription" class="form-control prescription-textarea" rows="3">@Model.Appointment.Prescription</textarea>
+                                    <span asp-validation-for="TreatmentInfo.Prescription" class="text-danger"></span>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="TreatmentInfo.BillAmount" class="form-label">Bill Amount ($)</label>
+                                            <input asp-for="TreatmentInfo.BillAmount" class="form-control" type="number" step="0.01" value="@Model.Appointment.BillAmount" />
+                                            <span asp-validation-for="TreatmentInfo.BillAmount" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group mt-md-4">
+                                            <div class="form-check form-switch">
+                                                <input asp-for="TreatmentInfo.IsPaid" class="form-check-input" checked="@(Model.Appointment.BillStatus == "Paid")" />
+                                                <label asp-for="TreatmentInfo.IsPaid" class="form-check-label">Bill Paid</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="appointment-actions mt-4">
+                                    @if (Model.Appointment.AppointmentStatus == 1) // Approved
+                                    {
+                                        <button type="submit" asp-page-handler="CompleteTreatment" class="btn btn-primary">Complete Treatment</button>
+                                    }
+                                    else if (Model.Appointment.AppointmentStatus == 3) // Completed
+                                    {
+                                        <button type="submit" asp-page-handler="UpdateTreatment" class="btn btn-primary">Update Information</button>
+                                    }
+                                    <a asp-page="./Dashboard" asp-route-id="@Model.DoctorId" class="btn btn-outline-secondary">Back to Dashboard</a>
+                                </div>
+                            </form>
+                        </div>
+                    }
+                    else if (Model.Appointment.AppointmentStatus == 2) // Pending
+                    {
+                        <div class="appointment-section">
+                            <div class="appointment-section-title">Actions</div>
+                            <form method="post" class="d-inline">
+                                <input type="hidden" name="appointmentId" value="@Model.Appointment.AppointId" />
+                                <div class="appointment-actions">
+                                    <button type="submit" asp-page-handler="Approve" class="btn btn-success" data-bs-toggle="tooltip" title="Approve this appointment">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
+                                            <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
+                                        </svg>
+                                        Approve
+                                    </button>
+                                    <button type="submit" asp-page-handler="Reject" class="btn btn-danger" data-bs-toggle="tooltip" title="Reject this appointment">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+                                        </svg>
+                                        Reject
+                                    </button>
+                                    <a asp-page="./Dashboard" asp-route-id="@Model.DoctorId" class="btn btn-outline-secondary">Back to Dashboard</a>
+                                </div>
+                            </form>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="appointment-actions mt-4">
+                            <a asp-page="./Dashboard" asp-route-id="@Model.DoctorId" class="btn btn-outline-secondary">Back to Dashboard</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="history-card">
+                <div class="history-header">
+                    <h5 class="mb-0">Patient Treatment History</h5>
+                </div>
+                <div class="history-body">
+                    @if (Model.PatientHistory.Any())
+                    {
+                        <ul class="history-list">
+                            @foreach (var appointment in Model.PatientHistory.Take(5))
+                            {
+                                <li class="history-item">
+                                    <div class="history-date">@appointment.Date?.ToString("MMMM dd, yyyy")</div>
+                                    <div class="history-diagnosis">@(appointment.Disease ?? "No diagnosis")</div>
+                                    <p class="history-treatment">
+                                        @(string.IsNullOrEmpty(appointment.Progress) ? "No treatment recorded" : appointment.Progress)
+                                    </p>
+                                </li>
+                            }
+                        </ul>
+                        <div class="text-center mt-3">
+                            <a asp-page="./PatientHistory" asp-route-id="@Model.DoctorId" asp-route-patientId="@Model.Appointment.PatientId" class="btn btn-sm btn-outline-primary">View Complete History</a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-journal-medical text-muted mb-3" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v.634l.549-.317a.5.5 0 1 1 .5.866L9 6l.549.317a.5.5 0 1 1-.5.866L8.5 6.866V7.5a.5.5 0 0 1-1 0v-.634l-.549.317a.5.5 0 1 1-.5-.866L7 6l-.549-.317a.5.5 0 0 1 .5-.866l.549.317V4.5A.5.5 0 0 1 8 4zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
+                                <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"/>
+                                <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/>
+                            </svg>
+                            <p class="text-muted">No previous treatment history for this patient.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="card shadow-custom rounded-custom mt-4">
+                <div class="card-body">
+                    <h5>Quick Actions</h5>
+                    <div class="list-group mt-3">
+                        <a href="#" class="list-group-item list-group-item-action" data-bs-toggle="tooltip" title="Print this appointment details" onclick="window.print(); return false;">
+                            <div class="d-flex align-items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-printer me-2" viewBox="0 0 16 16">
+                                    <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
+                                    <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/>
+                                </svg>
+                                Print Appointment Details
+                            </div>
+                        </a>
+                        <a href="mailto:@Model.Appointment.Patient.User.Email" class="list-group-item list-group-item-action">
+                            <div class="d-flex align-items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-envelope me-2" viewBox="0 0 16 16">
+                                    <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/>
+                                </svg>
+                                Email Patient
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

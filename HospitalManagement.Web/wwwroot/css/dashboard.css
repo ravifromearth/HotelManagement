@@ -1,0 +1,260 @@
+/* Dashboard Specific Styles */
+
+.dashboard-stats {
+  margin-bottom: 30px;
+}
+
+.stats-card {
+  background: linear-gradient(to right, #f8f9fa, #e9ecef);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.stats-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.stats-card .stats-icon {
+  width: 50px;
+  height: 50px;
+  margin-bottom: 15px;
+}
+
+.stats-card .stats-title {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #6c757d;
+  margin-bottom: 5px;
+}
+
+.stats-card .stats-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #0275d8;
+  margin-bottom: 0;
+}
+
+.appointment-list {
+  margin-bottom: 30px;
+}
+
+.appointment-item {
+  padding: 15px;
+  border-left: 5px solid transparent;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.appointment-item:hover {
+  transform: translateX(5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.appointment-item.pending {
+  border-left-color: #ffc107;
+}
+
+.appointment-item.approved {
+  border-left-color: #28a745;
+}
+
+.appointment-item.completed {
+  border-left-color: #0275d8;
+}
+
+.appointment-item.rejected {
+  border-left-color: #dc3545;
+}
+
+.appointment-time {
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin-bottom: 5px;
+}
+
+.appointment-patient {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.appointment-status {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.appointment-status.pending {
+  background-color: rgba(255, 193, 7, 0.2);
+  color: #856404;
+}
+
+.appointment-status.approved {
+  background-color: rgba(40, 167, 69, 0.2);
+  color: #155724;
+}
+
+.appointment-status.completed {
+  background-color: rgba(2, 117, 216, 0.2);
+  color: #004085;
+}
+
+.appointment-status.rejected {
+  background-color: rgba(220, 53, 69, 0.2);
+  color: #721c24;
+}
+
+.calendar-widget {
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.calendar-header h5 {
+  margin-bottom: 0;
+}
+
+.calendar-nav {
+  display: flex;
+  gap: 10px;
+}
+
+.calendar-nav button {
+  border: none;
+  background-color: transparent;
+  color: #0275d8;
+  cursor: pointer;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  font-size: 0.9rem;
+}
+
+.calendar-day.today {
+  background-color: #0275d8;
+  color: #ffffff;
+}
+
+.calendar-day.has-appointment {
+  position: relative;
+}
+
+.calendar-day.has-appointment::after {
+  content: '';
+  position: absolute;
+  bottom: 5px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #dc3545;
+}
+
+.profile-section {
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.profile-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 20px;
+  background-color: #e9ecef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: #6c757d;
+}
+
+.profile-info h4 {
+  margin-bottom: 5px;
+}
+
+.profile-specialty {
+  color: #6c757d;
+  font-style: italic;
+}
+
+.profile-details {
+  margin-top: 30px;
+}
+
+.detail-row {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.detail-label {
+  flex: 0 0 150px;
+  font-weight: 600;
+  color: #6c757d;
+}
+
+.detail-value {
+  flex: 1;
+}
+
+@media (max-width: 768px) {
+  .stats-card {
+    margin-bottom: 20px;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .profile-avatar {
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+
+  .detail-row {
+    flex-direction: column;
+  }
+
+  .detail-label {
+    margin-bottom: 5px;
+  }
+}

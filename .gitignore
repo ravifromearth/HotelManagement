@@ -1,0 +1,7 @@
+# Ignore Visual Studio cache files
+.vs/
+*.vsidx
+
+# Ignore build output folders (anywhere in the repo)
+**/bin/
+**/obj/

@@ -1,0 +1,119 @@
+@page "{id:int}"
+@model HospitalManagement.Web.Pages.Admin.DepartmentPages.DeleteModel
+@{
+    ViewData["Title"] = "Delete Department";
+}
+
+<div class="container admin-bg py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-page="/Admin/Departments">Departments</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Delete Department</li>
+                </ol>
+            </nav>
+            <h1 class="display-4">Delete Department</h1>
+            <p class="lead">Confirm department deletion</p>
+        </div>
+    </div>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-custom rounded-custom border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">Confirm Deletion</h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <strong>Warning:</strong> You are about to delete this department. This action cannot be undone.
+                    </div>
+
+                    <form method="post">
+                        <input type="hidden" asp-for="DepartmentModel.DeptNo" />
+
+                        <div class="mb-4">
+                            <h5>Are you sure you want to delete the following department?</h5>
+                        </div>
+
+                        <dl class="row">
+                            <dt class="col-sm-3">Department ID</dt>
+                            <dd class="col-sm-9">@Model.DepartmentModel.DeptNo</dd>
+
+                            <dt class="col-sm-3">Department Name</dt>
+                            <dd class="col-sm-9">@Model.DepartmentModel.DeptName</dd>
+
+                            <dt class="col-sm-3">Description</dt>
+                            <dd class="col-sm-9">@(Model.DepartmentModel.Description ?? "No description")</dd>
+
+                            <dt class="col-sm-3">Doctors Assigned</dt>
+                            <dd class="col-sm-9">
+                                @Model.DepartmentModel.DoctorCount
+                                @if (Model.DepartmentModel.DoctorCount > 0)
+                                {
+                                    <div class="alert alert-danger mt-2 mb-0">
+                                        <strong>Deletion not possible!</strong> This department has doctors assigned.
+                                        You must reassign all doctors before deleting this department.
+                                    </div>
+                                }
+                            </dd>
+                        </dl>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-page="/Admin/Departments" class="btn btn-outline-secondary">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left me-1" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+                                </svg>
+                                Cancel
+                            </a>
+                            <button type="submit" class="btn btn-danger" @(Model.DepartmentModel.DoctorCount > 0 ? "disabled" : "")>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash me-1" viewBox="0 0 16 16">
+                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
+                                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
+                                </svg>
+                                Delete Department
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-custom rounded-custom">
+                <div class="card-header bg-warning">
+                    <h5 class="mb-0">Department Deletion Notes</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-exclamation-triangle text-warning mb-3 d-block mx-auto" viewBox="0 0 16 16">
+                            <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/>
+                            <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995z"/>
+                        </svg>
+                    </div>
+
+                    <p><strong>Before deleting a department, please note:</strong></p>
+
+                    <ul>
+                        <li>A department with assigned doctors cannot be deleted</li>
+                        <li>You must first reassign all doctors to other departments</li>
+                        <li>This action is permanent and cannot be undone</li>
+                        <li>All historical data associated with this department will be lost</li>
+                    </ul>
+
+                    <div class="alert alert-info mt-3">
+                        <strong>Tip:</strong> Consider renaming or repurposing departments instead of deleting them if they have been used in the past.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

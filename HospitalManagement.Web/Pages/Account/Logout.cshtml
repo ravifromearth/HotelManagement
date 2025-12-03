@@ -1,0 +1,22 @@
+@page
+@model HospitalManagement.Web.Pages.Account.LogoutModel
+@{
+    ViewData["Title"] = "Logout";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-lg">
+            <div class="card-header bg-primary text-white">
+                <h2 class="text-center">Hospital Management System</h2>
+            </div>
+            <div class="card-body text-center">
+                <h3 class="card-title mb-4">Log Out</h3>
+                <p>You have been logged out of the application.</p>
+                <p>
+                    <a asp-page="/Account/Login" class="btn btn-primary">Return to Login</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

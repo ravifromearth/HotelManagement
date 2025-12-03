@@ -1,0 +1,53 @@
+@using System.Security.Claims
+
+<ul class="navbar-nav">
+@if (User.Identity.IsAuthenticated)
+{
+    var userRole = User.FindFirstValue(ClaimTypes.Role);
+    string roleText = userRole switch
+    {
+        "1" => "Doctor",
+        "2" => "Patient",
+        "3" => "Admin",
+        _ => "User"
+    };
+
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="badge bg-primary me-1">@roleText</span>
+            Welcome, @User.Identity.Name!
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+            @if (userRole == "1")
+            {
+                <li><a class="dropdown-item" asp-area="" asp-page="/Doctors/Profile" asp-route-id="@User.FindFirstValue(ClaimTypes.NameIdentifier)">My Profile</a></li>
+                <li><a class="dropdown-item" asp-area="" asp-page="/Doctors/Dashboard" asp-route-id="@User.FindFirstValue(ClaimTypes.NameIdentifier)">Dashboard</a></li>
+            }
+            else if (userRole == "2")
+            {
+                <li><a class="dropdown-item" asp-area="" asp-page="/Patients/Profile" asp-route-id="@User.FindFirstValue(ClaimTypes.NameIdentifier)">My Profile</a></li>
+                <li><a class="dropdown-item" asp-area="" asp-page="/Patients/Dashboard" asp-route-id="@User.FindFirstValue(ClaimTypes.NameIdentifier)">Dashboard</a></li>
+            }
+            else if (userRole == "3")
+            {
+                <li><a class="dropdown-item" asp-area="" asp-page="/Admin/Dashboard">Admin Dashboard</a></li>
+            }
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                <form class="form-inline" asp-page="/Account/Logout" method="post">
+                    <button type="submit" class="dropdown-item">Logout</button>
+                </form>
+            </li>
+        </ul>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-page="/Account/Register">Register</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark btn btn-outline-primary ms-2" asp-page="/Account/Login">Login</a>
+    </li>
+}
+</ul>

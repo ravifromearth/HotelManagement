@@ -1,0 +1,183 @@
+@page "{id:int}"
+@model HospitalManagement.Web.Pages.Patients.DashboardModel
+@{
+    ViewData["Title"] = "Patient Dashboard";
+}
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-4">Welcome, @Model.Patient.Name!</h1>
+            <p class="lead">Manage your medical appointments and health information</p>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Your Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-2">
+                        <div class="col-sm-4 fw-bold">Name:</div>
+                        <div class="col-sm-8">@Model.Patient.Name</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-sm-4 fw-bold">Email:</div>
+                        <div class="col-sm-8">@Model.Patient.User.Email</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-sm-4 fw-bold">Phone:</div>
+                        <div class="col-sm-8">@Model.Patient.Phone</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-sm-4 fw-bold">Gender:</div>
+                        <div class="col-sm-8">@(Model.Patient.Gender == "M" ? "Male" : (Model.Patient.Gender == "F" ? "Female" : "Other"))</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-sm-4 fw-bold">Date of Birth:</div>
+                        <div class="col-sm-8">@Model.Patient.BirthDate.ToString("yyyy-MM-dd")</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-sm-4 fw-bold">Address:</div>
+                        <div class="col-sm-8">@Model.Patient.Address</div>
+                    </div>
+                    <div class="mt-3">
+                        <a asp-page="./Edit" asp-route-id="@Model.Patient.Id" class="btn btn-outline-primary">Edit Profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Current Appointment</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.CurrentAppointment != null)
+                    {
+                        <div class="row mb-2">
+                            <div class="col-sm-4 fw-bold">Doctor:</div>
+                            <div class="col-sm-8">@(Model.CurrentAppointment.Doctor?.Name ?? "Not assigned")</div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-4 fw-bold">Department:</div>
+                            <div class="col-sm-8">@(Model.CurrentAppointment.Doctor?.Department?.DeptName ?? "N/A")</div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-4 fw-bold">Date & Time:</div>
+                            <div class="col-sm-8">@Model.CurrentAppointment.Date?.ToString("yyyy-MM-dd HH:mm")</div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-4 fw-bold">Status:</div>
+                            <div class="col-sm-8">
+                                @{
+                                    string status = Model.CurrentAppointment.AppointmentStatus switch
+                                    {
+                                        1 => "Approved",
+                                        2 => "Pending",
+                                        3 => "Completed",
+                                        4 => "Rejected",
+                                        _ => "Unknown"
+                                    };
+                                    string statusClass = Model.CurrentAppointment.AppointmentStatus switch
+                                    {
+                                        1 => "text-success",
+                                        2 => "text-warning",
+                                        3 => "text-primary",
+                                        4 => "text-danger",
+                                        _ => "text-muted"
+                                    };
+                                }
+                                <span class="@statusClass">@status</span>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <a asp-page="./AppointmentDetail" asp-route-id="@Model.CurrentAppointment.AppointId" class="btn btn-outline-primary">View Details</a>
+                        </div>
+                    }
+                    else
+                    {
+                        <p>You don't have any current appointments.</p>
+                        <a asp-page="./BookAppointment" class="btn btn-primary">Book an Appointment</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Recent Appointments</h5>
+                    <a asp-page="./AppointmentHistory" class="btn btn-sm btn-outline-light">View All</a>
+                </div>
+                <div class="card-body">
+                    @if (Model.RecentAppointments.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Doctor</th>
+                                        <th>Department</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var appointment in Model.RecentAppointments)
+                                    {
+                                        string status = appointment.AppointmentStatus switch
+                                        {
+                                            1 => "Approved",
+                                            2 => "Pending",
+                                            3 => "Completed",
+                                            4 => "Rejected",
+                                            _ => "Unknown"
+                                        };
+                                        string statusClass = appointment.AppointmentStatus switch
+                                        {
+                                            1 => "text-success",
+                                            2 => "text-warning",
+                                            3 => "text-primary",
+                                            4 => "text-danger",
+                                            _ => "text-muted"
+                                        };
+                                        <tr>
+                                            <td>@appointment.Date?.ToString("yyyy-MM-dd HH:mm")</td>
+                                            <td>@(appointment.Doctor?.Name ?? "Not assigned")</td>
+                                            <td>@(appointment.Doctor?.Department?.DeptName ?? "N/A")</td>
+                                            <td>
+                                                <span class="@statusClass">@status</span>
+                                            </td>
+                                            <td>
+                                                <a asp-page="./AppointmentDetail" asp-route-id="@appointment.AppointId" class="btn btn-sm btn-outline-primary">View</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p>You don't have any recent appointments.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="d-grid gap-2 d-md-block">
+                <a asp-page="./BookAppointment" class="btn btn-primary me-md-2">Book New Appointment</a>
+                <a asp-page="./TreatmentHistory" class="btn btn-outline-primary">View Treatment History</a>
+            </div>
+        </div>
+    </div>
+</div>

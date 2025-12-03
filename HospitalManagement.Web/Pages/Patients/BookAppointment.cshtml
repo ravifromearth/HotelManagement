@@ -1,0 +1,143 @@
+@page "{id:int}"
+@model HospitalManagement.Web.Pages.Patients.BookAppointmentModel
+@{
+    ViewData["Title"] = "Book Appointment";
+}
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h1>Book New Appointment</h1>
+            <p class="lead">Schedule an appointment with one of our specialists</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Appointment Request Form</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <input type="hidden" asp-for="AppointmentRequest.PatientId" value="@Model.PatientId" />
+
+                        <div class="mb-3">
+                            <label asp-for="AppointmentRequest.DepartmentId" class="form-label">Department</label>
+                            <select asp-for="AppointmentRequest.DepartmentId" class="form-select"
+                                    asp-items="@(new SelectList(Model.Departments, "DeptNo", "DeptName"))" onchange="this.form.submit()">
+                                <option value="">-- Select Department --</option>
+                            </select>
+                            <span asp-validation-for="AppointmentRequest.DepartmentId" class="text-danger"></span>
+                        </div>
+
+                        @if (Model.SelectedDepartment != null)
+                        {
+                            <div class="mb-3">
+                                <label asp-for="AppointmentRequest.DoctorId" class="form-label">Doctor</label>
+                                <select asp-for="AppointmentRequest.DoctorId" class="form-select"
+                                        asp-items="@(new SelectList(Model.Doctors, "Id", "Name"))" onchange="this.form.submit()">
+                                    <option value="">-- Select Doctor --</option>
+                                </select>
+                                <span asp-validation-for="AppointmentRequest.DoctorId" class="text-danger"></span>
+                            </div>
+                        }
+
+                        @if (Model.SelectedDoctor != null)
+                        {
+                            <div class="card bg-light mb-3">
+                                <div class="card-header">Doctor Information</div>
+                                <div class="card-body">
+                                    <h5 class="card-title">Dr. @Model.SelectedDoctor.Name</h5>
+                                    <p class="card-text">
+                                        <strong>Specialization:</strong> @Model.SelectedDoctor.Specialization<br />
+                                        <strong>Qualifications:</strong> @Model.SelectedDoctor.Qualification<br />
+                                        <strong>Experience:</strong> @Model.SelectedDoctor.WorkExperience years<br />
+                                        <strong>Charges per Visit:</strong> $@Model.SelectedDoctor.ChargesPerVisit
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="AppointmentRequest.SlotDate" class="form-label">Appointment Date</label>
+                                <input asp-for="AppointmentRequest.SlotDate" class="form-control" type="date" min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                <span asp-validation-for="AppointmentRequest.SlotDate" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Available Time Slots</label>
+                                <div class="row">
+                                    @if (Model.AvailableSlots.Any())
+                                    {
+                                        foreach (var slot in Model.AvailableSlots)
+                                        {
+                                            string slotTime = slot.ToString("HH:mm");
+                                            <div class="col-md-3 mb-2">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="AppointmentRequest.SlotTime"
+                                                           id="slot_@slotTime" value="@slotTime" />
+                                                    <label class="form-check-label" for="slot_@slotTime">
+                                                        @slotTime
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="col">
+                                            <p class="text-danger">No available slots found. Please select another date.</p>
+                                        </div>
+                                    }
+                                </div>
+                                <span asp-validation-for="AppointmentRequest.SlotTime" class="text-danger"></span>
+                            </div>
+                        }
+
+                        <div class="mb-3">
+                            <button type="submit" asp-page-handler="Book" class="btn btn-primary">Book Appointment</button>
+                            <a asp-page="./Dashboard" asp-route-id="@Model.PatientId" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">How to Book</h5>
+                </div>
+                <div class="card-body">
+                    <ol>
+                        <li>Select a department</li>
+                        <li>Choose a doctor from the department</li>
+                        <li>Pick an available date</li>
+                        <li>Select an available time slot</li>
+                        <li>Confirm your appointment</li>
+                    </ol>
+                    <p>Your appointment will be pending until approved by the doctor.</p>
+                </div>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Need Help?</h5>
+                </div>
+                <div class="card-body">
+                    <p>If you need assistance booking an appointment, please contact our help desk:</p>
+                    <p>
+                        <i class="bi bi-telephone-fill"></i> +1 (555) 123-4567<br>
+                        <i class="bi bi-envelope-fill"></i> help@hospital.com
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

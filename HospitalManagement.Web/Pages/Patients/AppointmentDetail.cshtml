@@ -1,0 +1,211 @@
+@page "{id:int}"
+@model HospitalManagement.Web.Pages.Patients.AppointmentDetailModel
+@{
+    ViewData["Title"] = "Appointment Details";
+}
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-page="./Dashboard" asp-route-id="@Model.PatientId">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Appointment Details</li>
+                </ol>
+            </nav>
+            <h1>Appointment Details</h1>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Appointment Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold">Appointment ID:</div>
+                        <div class="col-sm-8">@Model.Appointment.AppointId</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold">Doctor:</div>
+                        <div class="col-sm-8">@(Model.Appointment.Doctor?.Name ?? "Not assigned")</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold">Department:</div>
+                        <div class="col-sm-8">@(Model.Appointment.Doctor?.Department?.DeptName ?? "N/A")</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold">Date & Time:</div>
+                        <div class="col-sm-8">@Model.Appointment.Date?.ToString("yyyy-MM-dd HH:mm")</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold">Status:</div>
+                        <div class="col-sm-8">
+                            @{
+                                string status = Model.Appointment.AppointmentStatus switch
+                                {
+                                    1 => "Approved",
+                                    2 => "Pending",
+                                    3 => "Completed",
+                                    4 => "Rejected",
+                                    _ => "Unknown"
+                                };
+                                string statusClass = Model.Appointment.AppointmentStatus switch
+                                {
+                                    1 => "badge bg-success",
+                                    2 => "badge bg-warning text-dark",
+                                    3 => "badge bg-primary",
+                                    4 => "badge bg-danger",
+                                    _ => "badge bg-secondary"
+                                };
+                            }
+                            <span class="@statusClass">@status</span>
+                        </div>
+                    </div>
+
+                    @if (Model.Appointment.AppointmentStatus == 3) // Completed
+                    {
+                        <hr />
+                        <h4>Treatment Information</h4>
+
+                        <div class="row mb-3">
+                            <div class="col-sm-4 fw-bold">Diagnosis:</div>
+                            <div class="col-sm-8">@(Model.Appointment.Disease ?? "N/A")</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-4 fw-bold">Treatment Progress:</div>
+                            <div class="col-sm-8">@(Model.Appointment.Progress ?? "N/A")</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-4 fw-bold">Prescription:</div>
+                            <div class="col-sm-8">@(Model.Appointment.Prescription ?? "N/A")</div>
+                        </div>
+                    }
+
+                    <hr />
+                    <h4>Billing Information</h4>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold">Bill Amount:</div>
+                        <div class="col-sm-8">
+                            @if (Model.Appointment.BillAmount > 0)
+                            {
+                                <span>$@Model.Appointment.BillAmount</span>
+                            }
+                            else
+                            {
+                                <span>Not generated</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold">Payment Status:</div>
+                        <div class="col-sm-8">
+                            @if (!string.IsNullOrEmpty(Model.Appointment.BillStatus))
+                            {
+                                string billStatusClass = Model.Appointment.BillStatus == "Paid" ? "badge bg-success" : "badge bg-warning text-dark";
+                                <span class="@billStatusClass">@Model.Appointment.BillStatus</span>
+                            }
+                            else
+                            {
+                                <span>N/A</span>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        @if (Model.Appointment.AppointmentStatus == 3 && Model.Appointment.FeedbackStatus != 1) // Completed and feedback not given
+                        {
+                            <a asp-page="./GiveFeedback" asp-route-id="@Model.Appointment.AppointId" class="btn btn-primary me-md-2">Give Feedback</a>
+                        }
+                        <a asp-page="./Dashboard" asp-route-id="@Model.PatientId" class="btn btn-outline-secondary">Back to Dashboard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            @if (Model.Appointment.AppointmentStatus == 1) // Approved
+            {
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">Appointment Confirmed</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Your appointment has been approved. Please arrive 15 minutes before your scheduled time.</p>
+                        <p>If you need to cancel, please do so at least 24 hours in advance.</p>
+                        <form method="post">
+                            <input type="hidden" name="appointmentId" value="@Model.Appointment.AppointId" />
+                            <button type="submit" asp-page-handler="Cancel" class="btn btn-danger"
+                                    onclick="return confirm('Are you sure you want to cancel this appointment?');">
+                                Cancel Appointment
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            }
+            else if (Model.Appointment.AppointmentStatus == 2) // Pending
+            {
+                <div class="card shadow-sm mb-4 border-warning">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0">Pending Confirmation</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Your appointment request is waiting for doctor's approval. We'll notify you once it's confirmed.</p>
+                        <form method="post">
+                            <input type="hidden" name="appointmentId" value="@Model.Appointment.AppointId" />
+                            <button type="submit" asp-page-handler="Cancel" class="btn btn-danger"
+                                    onclick="return confirm('Are you sure you want to cancel this appointment request?');">
+                                Cancel Request
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            }
+            else if (Model.Appointment.AppointmentStatus == 4) // Rejected
+            {
+                <div class="card shadow-sm mb-4 border-danger">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="mb-0">Appointment Rejected</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Unfortunately, your appointment request could not be accommodated at the requested time.</p>
+                        <p>Please try booking another time slot or contact the hospital directly for assistance.</p>
+                        <a asp-page="./BookAppointment" asp-route-id="@Model.PatientId" class="btn btn-primary">Book New Appointment</a>
+                    </div>
+                </div>
+            }
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Doctor Information</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.Appointment.Doctor != null)
+                    {
+                        <h5>Dr. @Model.Appointment.Doctor.Name</h5>
+                        <p>
+                            <strong>Specialization:</strong> @Model.Appointment.Doctor.Specialization<br />
+                            <strong>Qualification:</strong> @Model.Appointment.Doctor.Qualification<br />
+                            <strong>Experience:</strong> @Model.Appointment.Doctor.WorkExperience years<br />
+                        </p>
+                    }
+                    else
+                    {
+                        <p>Doctor information not available.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

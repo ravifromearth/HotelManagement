@@ -1,0 +1,222 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+  color: #333;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
+  color: var(--bs-secondary-color);
+  text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
+  text-align: start;
+}
+
+/* Hospital Management System Custom Styles */
+
+/* Main Layout */
+.navbar {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff !important;
+}
+
+.navbar-brand {
+  font-weight: bold;
+  color: #0275d8 !important;
+}
+
+.footer {
+  background-color: #f8f9fa;
+  padding: 20px 0;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  line-height: 60px;
+}
+
+/* Dashboard Cards */
+.dashboard-card {
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-bottom: 20px;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.dashboard-card .card-header {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  font-weight: 600;
+  padding: 15px 20px;
+}
+
+.dashboard-card .card-body {
+  padding: 20px;
+}
+
+/* Status Badges */
+.badge {
+  padding: 5px 10px;
+  border-radius: 30px;
+  font-weight: 500;
+}
+
+/* Forms */
+.form-container {
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+.form-control, .btn {
+  border-radius: 5px;
+}
+
+.form-label {
+  font-weight: 500;
+}
+
+/* Table Styling */
+.table-responsive {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.table {
+  margin-bottom: 0;
+}
+
+.table thead th {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+.table tbody tr:hover {
+  background-color: rgba(2, 117, 216, 0.05);
+}
+
+/* Login and Registration Pages */
+.auth-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+}
+
+.auth-container .card-header {
+  background-color: transparent;
+  border-bottom: none;
+  text-align: center;
+  padding-bottom: 0;
+}
+
+.auth-container .card-body {
+  padding-top: 0;
+}
+
+/* Home Page */
+.hero-section {
+  background-image: url('../images/hospital-bg.svg');
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  text-align: center;
+  padding: 100px 0;
+  margin-bottom: 40px;
+  border-radius: 10px;
+}
+
+.hero-section h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hero-section p {
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto 30px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Feature Cards */
+.feature-card {
+  text-align: center;
+  padding: 30px 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.feature-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+}
+
+/* Role-specific Styles */
+.doctor-bg {
+  background-color: rgba(2, 117, 216, 0.1);
+}
+
+.patient-bg {
+  background-color: rgba(40, 167, 69, 0.1);
+}
+
+.admin-bg {
+  background-color: rgba(23, 162, 184, 0.1);
+}
+
+/* Utility Classes */
+.rounded-custom {
+  border-radius: 10px;
+}
+
+.shadow-custom {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.text-primary-dark {
+  color: #0056b3;
+}
