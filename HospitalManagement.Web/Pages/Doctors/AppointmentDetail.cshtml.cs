@@ -148,8 +148,13 @@ namespace HospitalManagement.Web.Pages.Doctors
             }
 
             // Get appointment details
-            var appointment = await _unitOfWork.Appointments.GetByIdAsync(TreatmentInfo.AppointmentId) ??
-                throw new InvalidOperationException("Appointment not found");
+            var appointment = await _unitOfWork.Appointments.GetByIdAsync(TreatmentInfo.AppointmentId);
+            if (appointment == null)
+            {
+                _logger.LogWarning("Appointment with ID {AppointmentId} not found when completing treatment", TreatmentInfo.AppointmentId);
+                TempData["ErrorMessage"] = "Appointment not found. It may have been cancelled or deleted.";
+                return RedirectToPage("/Doctors/Dashboard", new { id = User.FindFirstValue(ClaimTypes.NameIdentifier) });
+            }
 
             // Verify current user is the assigned doctor
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -195,8 +200,13 @@ namespace HospitalManagement.Web.Pages.Doctors
             }
 
             // Get appointment details
-            var appointment = await _unitOfWork.Appointments.GetByIdAsync(TreatmentInfo.AppointmentId) ??
-                throw new InvalidOperationException("Appointment not found");
+            var appointment = await _unitOfWork.Appointments.GetByIdAsync(TreatmentInfo.AppointmentId);
+            if (appointment == null)
+            {
+                _logger.LogWarning("Appointment with ID {AppointmentId} not found when updating treatment", TreatmentInfo.AppointmentId);
+                TempData["ErrorMessage"] = "Appointment not found. It may have been cancelled or deleted.";
+                return RedirectToPage("/Doctors/Dashboard", new { id = User.FindFirstValue(ClaimTypes.NameIdentifier) });
+            }
 
             // Verify current user is the assigned doctor
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
