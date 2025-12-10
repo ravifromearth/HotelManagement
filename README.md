@@ -112,9 +112,7 @@ dotnet run --project HospitalManagement.Web
 
 The application will be seeded with the following default users:
 
-- **Admin**: admin@hospital.com / Password123!
-- **Doctor**: doctor@hospital.com / Password123!
-- **Patient**: patient@hospital.com / Password123!
+- **Admin**: plm@gmail.com / abcdef
 
 ## License
 
